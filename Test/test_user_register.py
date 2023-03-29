@@ -6,29 +6,10 @@ from datetime import datetime
 
 class TestUserRegister(BaseCase):
 
-    def __init__(self):
-        self.id_value = int
-
-    def setup(self):
-        base_part = "qa_test"
-        domain = "gmail.com"
-        random_part = datetime.now().strftime("%m%d%Y%H%M%S")
-        self.email = f"{base_part}{random_part}@{domain}"
-        self.url = "https://petstore.swagger.io/v2/user"
-
     def test_create_user_successfully(self):
-        date = {
-            "id": 0,
-            "username": "user_name_test",
-            "firstName": "first_name_test",
-            "lastName": "last_name_string",
-            "email": self.email,
-            "password": "password_123",
-            "phone": "0966050097",
-            "userStatus": 0
-        }
-
-        response = requests.post(self.url, json=date)
+        date = self.prepare_registration_data()
+        url = "https://petstore.swagger.io/v2/"
+        response = requests.post(url, json=date)
 
         self.active_user_name = response.json()
         json_data = json.dumps(response.json())  # Convert data to JSON format

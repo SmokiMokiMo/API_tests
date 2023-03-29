@@ -1,9 +1,9 @@
 import requests
 from lib.base_case import BaseCase
 from lib.assertion import Assertions
-from test_user_register import TestUserRegister
 
-class TestUserGet(BaseCase,TestUserRegister):
+
+class TestUserGet(BaseCase):
     """"Create method with wrong credentials 'user_name'"""
     def test_get_user_details_not_auth_negative(self):
         user_name = 123456789123456789
@@ -12,10 +12,10 @@ class TestUserGet(BaseCase,TestUserRegister):
         response = requests.get(url)
 
         Assertions.assert_status_code(response, 404)
-        Assertions.assert_json_has_key(response, expected_list)
+        Assertions.assert_has_keys(response, expected_list)
 
     def test_get_user_details(self):
-        url = f"https://petstore.swagger.io/v2/user/{self.id_value}"
+        url = f"https://petstore.swagger.io/v2/user/{self.id_value}" # NEED ADD ID_VALUE
         expected_list = ["code", "type", "message"]
         response = requests.get(url)
 
@@ -36,13 +36,3 @@ class TestUserGet(BaseCase,TestUserRegister):
 
         response = requests.post(url, data=data, headers=headers)
 
-        {
-            "id": 0,
-            "username": "string",
-            "firstName": "string",
-            "lastName": "string",
-            "email": "string",
-            "password": "string",
-            "phone": "string",
-            "userStatus": 0
-        }
