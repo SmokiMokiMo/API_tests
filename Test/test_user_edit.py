@@ -1,14 +1,13 @@
-import requests
 from lib.base_case import BaseCase
 from lib.assertion import Assertions
-
+from lib.my_requests import MyRequests
 
 class TestUserEdit(BaseCase):
 
     def test_edit_just_created_user(self):
         # REGISTER
         registration_data = self.prepare_registration_data()
-        response_user = requests.post("https://petstore.swagger.io/v2/user/", data=registration_data)
+        response_user = MyRequests.post("user/", data=registration_data)
 
         Assertions.assert_status_code(response_user, 200)
         Assertions.assert_json_has_key(response_user, "id")
@@ -23,7 +22,7 @@ class TestUserEdit(BaseCase):
             "email": email,
             "password": password
         }
-        response_login = requests.post("https://petstore.swagger.io/v2/user/login", login_data)
+        response_login = MyRequests.post("user/login", login_data)
 
         auth_sid = self.get_cookie(response_login, "auth_sid")
         token = self.get_headers(response_login, "x-csrf-token")
@@ -31,8 +30,8 @@ class TestUserEdit(BaseCase):
         # EDIT
         change_first_name = "user_name_test"
 
-        response_edit = requests.put(
-            f"https://petstore.swagger.io/v2/user/{user_id}",
+        response_edit = MyRequests.put(
+            f"user/{user_id}",
             headers={"x-csrf-token": token},
             cookies={"auth_sid": auth_sid},
             data={"firstName": change_first_name}
@@ -40,10 +39,10 @@ class TestUserEdit(BaseCase):
         Assertions.assert_status_code(response_edit, 200)
 
         # GET
-        response_get = requests.get(
-            "https://petstore.swagger.io/v2/user/SmokiMokiMo",
-            headers = {"x-csrf-token": token},
-            cookies = {"auth_sid": auth_sid},
+        response_get = MyRequests.get(
+            "user/SmokiMokiMo",
+            headers= {"x-csrf-token": token},
+            cookies= {"auth_sid": auth_sid},
         )
 
         Assertions.assert_value_by_name(

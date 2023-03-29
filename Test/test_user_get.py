@@ -1,4 +1,4 @@
-import requests
+from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertion import Assertions
 
@@ -34,5 +34,5 @@ class TestUserGet(BaseCase):
         expected_list = []
         url = "https://petstore.swagger.io/v2/user/login"
 
-        response = requests.post(url, data=data, headers=headers)
+        response = requests.post(url, data=date, headers=headers)
 
