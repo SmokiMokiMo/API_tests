@@ -13,7 +13,7 @@ class Assertions:
         assert response_as_dict[name] == expected_value, error_message
 
     @staticmethod
-    def assert_json_has_key(response: Response, name):
+    def assert_json_has_key(response: Response, name: list):
         try:
             response_as_dict = response.json()
         except json.JSONDecodeError:

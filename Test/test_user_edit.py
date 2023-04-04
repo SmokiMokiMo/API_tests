@@ -41,8 +41,8 @@ class TestUserEdit(BaseCase):
         # GET
         response_get = MyRequests.get(
             "user/SmokiMokiMo",
-            headers= {"x-csrf-token": token},
-            cookies= {"auth_sid": auth_sid},
+            headers={"x-csrf-token": token},
+            cookies={"auth_sid": auth_sid},
         )
 
         Assertions.assert_value_by_name(
@@ -51,12 +51,3 @@ class TestUserEdit(BaseCase):
             change_first_name,
             "Wrong name of the user first edit"
         )
-
-
-
-
-
-
-
-
-
