@@ -3,7 +3,9 @@ import os
 from requests import Response
 
 class Logger:
-    file_name = f"logs/log." + str(datetime.datetime.now()) + ".log"
+    log_dir = 'logs'
+    os.makedirs(log_dir, exist_ok=True)
+    file_name = f"logs/log." + str(datetime.datetime.now().strftime("%Y-%m-%d_-%H-%M-%S")) + ".log"
 
     @classmethod
     def _write_jog_to_file(cls, data: str):
@@ -19,8 +21,8 @@ class Logger:
         data_to_add += f"Time {str(datetime.datetime.now())}\n"
         data_to_add += f"Request method: {method}\n"
         data_to_add += f"Request URL: {url}\n"
-        data_to_add += f"Request headers: {url}\n"
-        data_to_add += f"Request cookies: {url}\n"
+        data_to_add += f"Request headers: {headers}\n"
+        data_to_add += f"Request cookies: {cookies}\n"
         data_to_add += f"\n"
 
         cls._write_jog_to_file(data_to_add)
@@ -30,10 +32,10 @@ class Logger:
         cookies_as_dict = dict(response.cookies)
         headers_as_dict = dict(response.headers)
 
-        data_to_add = f"Response code: {response.status_code}"
-        data_to_add += f"Response text {response.text}"
-        data_to_add += f"Response cookies {cookies_as_dict}"
-        data_to_add += f"Response headers {headers_as_dict}"
+        data_to_add = f"Response code: {response.status_code}\n"
+        data_to_add += f"Response text {response.text}\n"
+        data_to_add += f"Response cookies {cookies_as_dict}\n"
+        data_to_add += f"Response headers {headers_as_dict}\n"
         data_to_add += f"\n-----\n"
 
         cls._write_jog_to_file(data_to_add)

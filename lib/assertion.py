@@ -41,7 +41,7 @@ class Assertions:
         assert 19 == len(response_as_dict[id]), f"Response JSON doesn`t have valid id '{id}'"
 
     @staticmethod
-    def assert_status_code(response: Response, expected_status_code):
+    def assert_status_code(response: Response, expected_status_code: int):
         assert response.status_code == expected_status_code, \
             f"Unexpected status code! Expected: {expected_status_code}. Actual: {response.status_code}"
 
