@@ -36,19 +36,22 @@ class Assertions:
     def assert_json_has_values(response: Response, name: list):
         try:
             response_as_dict = response.json()
-
+            #data = json.loads(response_as_dict)
         except json.JSONDecodeError:
             assert False, f"Response is not in JSON format. Response text is '{response.text}'"
         for value in name:
-            assert value in response_as_dict.values(), f"Response JSON doesn`t have key '{value}'"
+            assert value in response_as_dict.values(), f"Response JSON doesn`t have value '{value}'\
+             response have this values \n{name} {response_as_dict.values()}" \
+                                                       f"{type(name)}, {type(response_as_dict.values())}"
 
     @staticmethod
     def assert_json_has_id(response: Response, id: int):
         try:
-            response_as_dict = response.json()
+            response_pars = response.json()
+            dict_data = json.load(response_pars)
         except json.JSONDecodeError:
             assert False, f"Response is not in JSON format. Response text is '{response.content}'"
-        assert 19 == len(response_as_dict[id]), f"Response JSON doesn`t have valid id '{id}'"
+        assert id == int(dict_data["message"]), f"Response JSON doesn`t have valid id = '{id}'"
 
     @staticmethod
     def assert_status_code(response: Response, expected_status_code: int):
