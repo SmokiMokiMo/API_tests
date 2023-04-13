@@ -16,24 +16,34 @@ class Assertions:
     def assert_json_has_key(response: Response, name: list):
         try:
             response_as_dict = response.json()
-            response_keys_list = dict(response_as_dict.keys())
+            response_keys_list = response_as_dict.keys()
         except json.JSONDecodeError:
             assert False, f"Response is not in JSON format. Response text is '{response.text}'"
-        assert name in response_keys_list, f"Response JSON doesn`t have key '{name}'"
+        for key in name:
+            assert key in response_keys_list, f"Response JSON doesn`t have key '{key}'"
 
     @staticmethod
     def assert_has_keys(response: Response, names: list):
         try:
             response_as_dict = response.json()
-            response_keys_list = list(response_as_dict.keys())
+            response_keys_list = response_as_dict.get()
         except json.JSONDecodeError:
             assert False, f"Response is not in JSON format. Response text is '{response.text}'"
-
         for name in names:
             assert name in response_keys_list, f"Response JSON doesn`t have key '{name}'"
 
     @staticmethod
-    def assert_json_has_id(response: Response, id):
+    def assert_json_has_values(response: Response, name: list):
+        try:
+            response_as_dict = response.json()
+
+        except json.JSONDecodeError:
+            assert False, f"Response is not in JSON format. Response text is '{response.text}'"
+        for value in name:
+            assert value in response_as_dict.values(), f"Response JSON doesn`t have key '{value}'"
+
+    @staticmethod
+    def assert_json_has_id(response: Response, id: int):
         try:
             response_as_dict = response.json()
         except json.JSONDecodeError:

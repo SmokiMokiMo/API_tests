@@ -8,12 +8,16 @@ import json
 class TestUserPetStore(BaseCase):
     def test_user_registration(self):
         registration_data = json.dumps(self.prepare_registration_data())
+        #registration_data_dict = dict(registration_data)
         headers = {
             "content-type": "application/json"
         }
         expected_keys = ["code", "type", "message"]
-        expected_values = [200, "unknown"]
+        expected_values = [200, "unknown", ]
         response = MyRequests.post("/user", data=registration_data, headers=headers)
 
         Assertions.assert_status_code(response, 200)
         Assertions.assert_json_has_key(response, expected_keys)
+        Assertions.assert_json_has_values(response, expected_values)
+        #Assertions.assert_json_has_id(response, registration_data_dict["id"])
+
