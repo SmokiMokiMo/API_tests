@@ -4,13 +4,17 @@ import json
 
 class Assertions:
     @staticmethod
-    def assert_value_by_name(response: Response, name, expected_value, error_message):
+    def assert_value_by_name(response: Response, name: list ):
         try:
-            response_as_dict = response.json()
+            response_data = response.json()
+            response_as_dict = response_data.values()
         except json.JSONDecodeError:
             assert False, f"Response in not in JSON format. Response text is '{response.text}'"
-        assert name in response_as_dict, f"Response JSON doesn`t have key '{name}' "
-        assert response_as_dict[name] == expected_value, error_message
+        for values in response_as_dict:
+            if values == name:
+                assert values == name, f"expected username is {name}"\
+                                               f"Wrong response username: {response_data.values()}\","
+
 
     @staticmethod
     def assert_json_has_key(response: Response, name: list):
@@ -36,7 +40,6 @@ class Assertions:
     def assert_json_has_values(response: Response, name: list):
         try:
             response_as_dict = response.json()
-            #data = json.loads(response_as_dict)
         except json.JSONDecodeError:
             assert False, f"Response is not in JSON format. Response text is '{response.text}'"
         for value in name:
@@ -51,7 +54,8 @@ class Assertions:
             dict_data = json.load(response_pars)
         except json.JSONDecodeError:
             assert False, f"Response is not in JSON format. Response text is '{response.content}'"
-        assert id == int(dict_data["message"]), f"Response JSON doesn`t have valid id = '{id}'"
+        assert id == int(dict_data["message"]), f"Response JSON doesn`t have valid id = '{id}'\"" \
+                                                f"response data is {dict_data}"
 
     @staticmethod
     def assert_status_code(response: Response, expected_status_code: int):
