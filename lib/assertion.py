@@ -4,7 +4,7 @@ import json
 
 class Assertions:
     @staticmethod
-    def assert_value_by_name(response: Response, name: list ):
+    def assert_value_by_name(response: Response, name: list):
         try:
             response_data = response.json()
             response_as_dict = response_data.values()
@@ -55,11 +55,13 @@ class Assertions:
         except json.JSONDecodeError:
             assert False, f"Response is not in JSON format. Response text is '{response.text}'"
         for key, value in name.items():
-            assert key in response_keys_list, f"Response JSON doesn`t have key '{name}' in respon we get this keys:\"" \
-                                              f"{response_keys_list}"
+            assert key in response_keys_list, f"Response JSON doesn`t have key '{key}'\
+                                    \nResponse keys is:\"{response_keys_list}\
+                                    \nExpected key is: {name.keys()}"
+            f"\nType of values is: {type(value)},\nType of response is:  {type(response_values_list)}"
             assert value in response_values_list, f"\nResponse JSON doesn`t have value '{value}'\
-            response have this values \n{response_values_list} expected values is {value}" \
-                                                  f"\n{type(value)}, {type(response_values_list)}"
+            \nResponse values is: {response_values_list}\nExpected values is {name.values()}" \
+                                                  f"\nType of values is: {type(value)},\nType of response is:  {type(response_values_list)}"
 
     @staticmethod
     def assert_json_has_id(response: Response, id: int):
@@ -74,5 +76,5 @@ class Assertions:
     @staticmethod
     def assert_status_code(response: Response, expected_status_code: int):
         assert response.status_code == expected_status_code, \
-            f"Unexpected status code! Expected: {expected_status_code}. Actual: {response.status_code}"
+            f"Unexpected status code!\n Expected: {expected_status_code}.\n Actual: {response.status_code}"
 
