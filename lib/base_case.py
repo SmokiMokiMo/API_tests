@@ -23,7 +23,7 @@ class BaseCase:
 
     def prepare_registration_data(self, id_user=None, username=None, email=None, password=None):
         if email is None:
-            base_part = "qa_test"
+            base_part = "qatest"
             domain = "gmail.com"
             random_part = datetime.now().strftime("%m%d%Y%H%M%S")
             email = f"{base_part}{random_part}@{domain}"
@@ -31,16 +31,16 @@ class BaseCase:
             letters = string.ascii_lowercase
             username = ''.join(random.choice(letters) for i in range(19))
         if password is None:
-            password = str(random.randint(10 ** 18, (10 ** 19) - 1))
+            password = random.randint(10 ** 18, (10 ** 19) - 1)
         if id_user is None:
             id_user = random.randint(1, 10 ** 19 - 1)
         return {
             "id": int(id_user),
-            "username": username,
-            "firstName": "Iho_r",
-            "lastName": "Zayat_s",
-            "email": email,
-            "password": password,
+            "username": str(username),
+            "firstName": "ihor",
+            "lastName": "zayats",
+            "email": str(email),
+            "password": str(password),
             "phone": "31451",
             "userStatus": 1
         }

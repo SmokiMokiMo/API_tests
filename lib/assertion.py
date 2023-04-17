@@ -44,8 +44,8 @@ class Assertions:
             assert False, f"Response is not in JSON format. Response text is '{response.text}'"
         for value in name:
             assert value in response_as_dict.values(), f"\nResponse JSON doesn`t have value '{value}'\
-             response have this values \n{name} {response_as_dict.values()}" \
-                                                       f"\n{type(name)}, {type(response_as_dict.values())}"
+             \nExpected data is: {name},\nResponse data is: {response_as_dict.values()}" \
+                                                       f"\nType od data is: {type(name)}, {type(response_as_dict.values())}"
     @staticmethod
     def assert_expected_dict(response: Response, name: dict):
         try:
