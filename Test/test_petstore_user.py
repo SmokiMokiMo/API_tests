@@ -7,7 +7,7 @@ import json
 
 class TestUserPetStore(BaseCase):
     def test_user_registration(self):
-        """New user registration"""
+        """New create new user"""
         # Preparing the data input datas using
         registration_data = self.prepare_registration_data()
         registration_data_dict = json.dumps(registration_data)
@@ -16,7 +16,7 @@ class TestUserPetStore(BaseCase):
             "accept": "application/json",
             "content-type": "application/json"
         }
-        # Preparing the data for asserting
+        # Preparing datas for asserting
         expected_username = registration_data["username"]
         expected_user_id = registration_data["id"]
         expected_username_email = registration_data["email"]
@@ -32,7 +32,7 @@ class TestUserPetStore(BaseCase):
         # Send 'POST' request on '/user' end point
         response_post = MyRequests.post("/user", data=registration_data_dict, headers=headers)
 
-        # We check the received data
+        # Check response datas
         Assertions.assert_status_code(response_post, 200)
         Assertions.assert_expected_dict(response_post, expected_dict)
         Assertions.assert_json_has_key(response_post, expected_keys)
@@ -45,7 +45,7 @@ class TestUserPetStore(BaseCase):
         # Preparing the data for asserting
         expected_dict_get = registration_data_dict
 
-        # We check the received data
+        # Check response datas
         Assertions.assert_status_code(response, 200)
         Assertions.assert_value_by_name(response, expected_username)
         Assertions.assert_expected_dict(response, registration_data)
@@ -61,17 +61,31 @@ class TestUserPetStore(BaseCase):
         response_put = MyRequests.put(f"/user/{expected_username}", data=registration_data_json, headers=headers)
 
         # Preparing the data for asserting
-        response_put_dict = json.loads(response_put)
-        expected_id_put = response_put_dict["id"]
+        registration_data_put_dict = registration_data_put
+        username_put = registration_data_put_dict["username"]
+        expected_id = registration_data_put_dict["id"]
+        expected_id_put = expected_id
         expected_dict_put = {
             "code": 200,
             "type": "unknown",
-            "message": str(expected_id_put)
+            "message": str(expected_id)
         }
 
-        # We check the received data
+        # Check response datas
         Assertions.assert_status_code(response, 200)
         Assertions.assert_expected_dict(response_put, expected_dict_put)
+
+        """Get edited user"""
+        # Send 'GET' request on '/user/{username}' end point
+        response = MyRequests.get(f"/user/{username_put}")
+
+        # Preparing the data for asserting
+        expected_dict_get = registration_data_dict
+
+        # Check response datas
+        Assertions.assert_status_code(response, 200)
+        Assertions.assert_value_by_name(response, expected_username)
+        Assertions.assert_expected_dict(response, registration_data_put_dict)
 
         """Logs user into the system '/user/login'"""
         # Preparing  authorization datas
@@ -83,19 +97,43 @@ class TestUserPetStore(BaseCase):
         # Send 'GET' request on '/user/login' end point
         response_login = MyRequests.get("/user/login", data=authorization_datas)
 
-        #
-
-        expected_message = f"logged in user session:{expected_id_put}"
+        # Preparing the data for asserting
         expected_dict_login = {
             "code": 200,
             "type": "unknown",
-            "message": str(expected_message)
         }
-        # We check the received data
+        # Check response data
         Assertions.assert_status_code(response, 200)
         Assertions.assert_expected_dict(response_login, expected_dict_login)
 
-        #"""Logs out current logged in user session on end point '/user/logout'"""
+        """Logs out current logged in user session on end point '/user/logout'"""
+        # Send 'GET' request on '/user/logout' end point
+        response_logout = MyRequests.get("/user/logout", headers=headers)
+
+        # Preparing the data for asserting
+        expected_dict_logout = {
+            "code": 200,
+            "type": "unknown",
+            "message": "ok"
+        }
+
+        # Check response data
+        Assertions.assert_status_code(response_logout, 200)
+        Assertions.assert_expected_dict(response_logout, expected_dict_logout)
+
+        """Delete user"""
+        #Send 'GET' request on '/user/{username}'
+        response_delete = MyRequests.get(f"/user/{expected_username}", headers=headers)
+
+        # Check response data
+        Assertions.assert_status_code(response_delete, 200)
+
+
+
+
+
+
+
 
 
 
