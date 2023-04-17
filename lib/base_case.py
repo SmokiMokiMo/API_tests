@@ -21,7 +21,7 @@ class BaseCase:
             assert False, f"Response is not JSON doesn`t have key '{name}'"
         return response_as_dict[name]
 
-    def prepare_registration_data(self, id=None, username=None, email=None, password=None):
+    def prepare_registration_data(self, id_user=None, username=None, email=None, password=None):
         if email is None:
             base_part = "qa_test"
             domain = "gmail.com"
@@ -32,17 +32,17 @@ class BaseCase:
             username = ''.join(random.choice(letters) for i in range(19))
         if password is None:
             password = str(random.randint(10 ** 18, (10 ** 19) - 1))
-        if id is None:
-            id = int(random.randint(1, 10 ** 19 - 1))
+        if id_user is None:
+            id_user = random.randint(1, 10 ** 19 - 1)
         return {
-            "id": id,
+            "id": int(id_user),
             "username": username,
-            "firstName": "first_name_test",
-            "lastName": "last_name_string",
+            "firstName": "Iho_r",
+            "lastName": "Zayat_s",
             "email": email,
             "password": password,
-            "phone": "0966050097",
-            "userStatus": 0
+            "phone": "31451",
+            "userStatus": 1
         }
 
 

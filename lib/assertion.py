@@ -43,9 +43,23 @@ class Assertions:
         except json.JSONDecodeError:
             assert False, f"Response is not in JSON format. Response text is '{response.text}'"
         for value in name:
-            assert value in response_as_dict.values(), f"Response JSON doesn`t have value '{value}'\
+            assert value in response_as_dict.values(), f"\nResponse JSON doesn`t have value '{value}'\
              response have this values \n{name} {response_as_dict.values()}" \
-                                                       f"{type(name)}, {type(response_as_dict.values())}"
+                                                       f"\n{type(name)}, {type(response_as_dict.values())}"
+    @staticmethod
+    def assert_expected_dict(response: Response, name: dict):
+        try:
+            response_as_dict = response.json()
+            response_keys_list = list(response_as_dict.keys())
+            response_values_list = list(response_as_dict.values())
+        except json.JSONDecodeError:
+            assert False, f"Response is not in JSON format. Response text is '{response.text}'"
+        for key, value in name.items():
+            assert key in response_keys_list, f"Response JSON doesn`t have key '{name}' in respon we get this keys:\"" \
+                                              f"{response_keys_list}"
+            assert value in response_values_list, f"\nResponse JSON doesn`t have value '{value}'\
+            response have this values \n{response_values_list} expected values is {value}" \
+                                                  f"\n{type(value)}, {type(response_values_list)}"
 
     @staticmethod
     def assert_json_has_id(response: Response, id: int):
