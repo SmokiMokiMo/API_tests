@@ -19,8 +19,6 @@ class TestUserPetStore(BaseCase):
         # Preparing datas for asserting
         expected_username = registration_data["username"]
         expected_user_id = registration_data["id"]
-        expected_username_email = registration_data["email"]
-        expected_username_passwd = registration_data["password"]
         expected_keys = ["code", "type", "message"]
         expected_values = [200, "unknown", str(expected_user_id)]
         expected_dict = {
