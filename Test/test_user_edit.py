@@ -10,12 +10,12 @@ class TestUserEdit(BaseCase):
     def test_edit_just_created_user(self):
         # REGISTER
         registration_data = self.prepare_registration_data()
-        registration_data_dict = json.dumps(registration_data)
+        registration_data_str = json.dumps(registration_data)
         headers = {
             "accept": "application/json",
             "content-type": "application/json"
         }
-        response_user = MyRequests.post("/user", data=registration_data_dict, headers=headers)
+        response_user = MyRequests.post("/user", data=registration_data_str, headers=headers)
 
         expected_user_id = registration_data["id"]
         expected_dict = {
@@ -27,37 +27,43 @@ class TestUserEdit(BaseCase):
         Assertions.assert_status_code(response_user, 200)
         Assertions.assert_expected_dict(response_user, expected_dict)
 
-        email = registration_data["email"]
+        username = registration_data["username"]
         first_name = registration_data["firstName"]
         password = registration_data["password"]
         user_id = registration_data["id"]
 
         # LOGIN
         login_data = {
-            "email": email,
+            "username": username,
             "password": password
         }
-        response_login = MyRequests.post("user/login", login_data)
+        response_login = MyRequests.get("/user/login", data=login_data)
 
-        auth_sid = self.get_cookie(response_login, "auth_sid")
-        token = self.get_headers(response_login, "x-csrf-token")
+        Assertions.assert_status_code(response_login, 200)
+
+        #auth_sid = self.get_cookie(response_login, "auth_sid")
+        #token = self.get_headers(response_login, "x-csrf-token")
+
+        # LOGOUT
+        response_logout = MyRequests.get(f"/user/logout", headers=headers)
+        Assertions.assert_status_code(response_logout, 200)
+
 
         # EDIT
-        change_first_name = "user_name_test"
 
-        response_edit = MyRequests.put(
-            f"user/{user_id}",
-            headers={"x-csrf-token": token},
-            cookies={"auth_sid": auth_sid},
-            data={"firstName": change_first_name}
-        )
+        data_put = self.prepare_registration_data()
+        data_put_str = json.dumps(data_put)
+
+        response_edit = MyRequests.put(f"/user/{user_id}", data=data_put_str, headers=headers)
         Assertions.assert_status_code(response_edit, 200)
 
         # GET
-        response_get = MyRequests.get(
-            "user/SmokiMokiMo",
-            headers={"x-csrf-token": token},
-            cookies={"auth_sid": auth_sid},
-        )
+        data_put_as_dict = data_put
+        username = data_put_as_dict["username"]
 
-        Assertions.assert_value_by_name(response_get, list(change_first_name))
+
+
+        response_get = MyRequests.get(f"/user/{username}", headers=headers)
+
+        Assertions.assert_status_code(response_get, 200)
+        Assertions.assert_expected_dict(response_get, data_put_as_dict)
