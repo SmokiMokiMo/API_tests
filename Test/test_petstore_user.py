@@ -12,11 +12,12 @@ class TestUserPetStore(BaseCase):
         registration_data = self.prepare_registration_data()
         registration_data_dict = json.dumps(registration_data)
 
+
+        # Preparing datas for asserting
         headers = {
             "accept": "application/json",
             "content-type": "application/json"
         }
-        # Preparing datas for asserting
         expected_username = registration_data["username"]
         expected_user_id = registration_data["id"]
         expected_keys = ["code", "type", "message"]

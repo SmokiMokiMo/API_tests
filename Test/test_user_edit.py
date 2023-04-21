@@ -1,6 +1,5 @@
 import json
 import allure
-
 from lib.base_case import BaseCase
 from lib.assertion import Assertions
 from lib.my_requests import MyRequests
@@ -8,26 +7,20 @@ from lib.my_requests import MyRequests
 
 @allure.epic("Performs main API points Register/Login/Login/Edit/GetUser. ")
 class TestUserEdit(BaseCase):
-    username = None
-    password = None
-    user_id = None
     headers = {
-            "accept": "application/json",
-            "content-type": "application/json"
-        }
+        "accept": "application/json",
+        "content-type": "application/json"
+    }
     data_put = None
 
     @allure.description("This test successfully register new user")
     def test_created_new_user(self):
         # REGISTER
-        registration_data = self.prepare_registration_data()
-        registration_data_str = json.dumps(registration_data)
-        self.username = registration_data["username"]
-        self.password = registration_data["password"]
-        self.user_id = registration_data["id"]
+        generate_new_user = self.prepare_registration_data()
+        registration_data_str = json.dumps(generate_new_user)
 
         response_user = MyRequests.post("/user", data=registration_data_str, headers=self.headers)
-        expected_user_id = registration_data["id"]
+        expected_user_id = generate_new_user["id"]
         expected_dict = {
             "code": 200,
             "type": "unknown",
@@ -36,15 +29,20 @@ class TestUserEdit(BaseCase):
 
         Assertions.assert_status_code(response_user, 200)
         Assertions.assert_expected_dict(response_user, expected_dict)
-        return self.username, self.password
+
+        # Store username and password as class attributes
+        self.__class__.username = generate_new_user["username"]
+        self.__class__.password = generate_new_user["password"]
+        self.__class__.user_id = generate_new_user["id"]
+
+        return self.__class__.username, self.__class__.password, self.__class__.user_id
 
     @allure.description("This test successfully perform login new user")
     def test_user_login(self):
         # LOGIN
-        username, password = self.test_created_new_user()
         login_data = {
-            "username": username,
-            "password": password
+            "username": self.__class__.username,
+            "password": self.__class__.password
         }
         response_login = MyRequests.get("/user/login", data=login_data)
         Assertions.assert_status_code(response_login, 200)
@@ -60,7 +58,7 @@ class TestUserEdit(BaseCase):
         # EDIT
         self.data_put = self.prepare_registration_data()
         data_put_str = json.dumps(self.data_put)
-        response_edit = MyRequests.put(f"/user/{self.user_id}", data=data_put_str, headers=self.headers)
+        response_edit = MyRequests.put(f"/user/{self.username}", data=data_put_str, headers=self.headers)
         Assertions.assert_status_code(response_edit, 200)
 
     @allure.description("This test successfully checks changed information about new user")
