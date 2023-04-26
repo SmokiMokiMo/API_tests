@@ -8,3 +8,4 @@ Test/pytest_cache
 venv/*
 Test/__pycache__/*
 lib/__pycache__/*
+*.pyc

@@ -3,7 +3,7 @@ from datetime import datetime
 from requests import Response
 import random
 import string
-
+import pytest
 
 class BaseCase:
     def get_cookie(self, response: Response, cookie_name):
@@ -45,4 +45,23 @@ class BaseCase:
             "userStatus": 1
         }
 
+    @pytest.fixture
+    def generate_user_data(self):
+        generate_new_user = self.prepare_registration_data()
+        return generate_new_user
 
+    @pytest.fixture(scope="session")
+    def new_user_credentials(self):
+        generate_new_user_cred = self.prepare_registration_data()
+        registration_data_str = json.dumps(generate_new_user_cred)
+        username = generate_new_user_cred["username"]
+        expected_dict = {
+            "code": 200,
+            "type": "unknown",
+            "message": str(generate_new_user_cred["id"])
+        }
+        login_data = {
+            "username": generate_new_user_cred["username"],
+            "password": generate_new_user_cred["password"]
+        }
+        return registration_data_str, generate_new_user_cred, expected_dict, username, login_data
